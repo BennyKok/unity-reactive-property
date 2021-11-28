@@ -10,7 +10,7 @@ namespace BennyKok.ReactiveProperty
     public abstract class TextBaseProperty<T> : PersistanceProperty<T>
     {
 #if HAS_TMP
-        public TMPro.TextMeshProUGUI targetText;
+        public TMPro.TMP_Text targetText;
 #endif
         public string prefix;
         public string suffix;
@@ -24,7 +24,7 @@ namespace BennyKok.ReactiveProperty
         public override void OnCreateResolver()
         {
 #if HAS_TMP
-            AddResolver<TMPro.TextMeshProUGUI>((label, state) =>
+            AddResolver<TMPro.TMP_Text>((label, state) =>
             {
                 switch (state)
                 {

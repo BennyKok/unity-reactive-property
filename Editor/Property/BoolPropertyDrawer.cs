@@ -16,6 +16,9 @@ namespace BennyKok.ReactiveProperty.Editor
 
             tabs[0].contents.Add(new ItemContent(property, ItemType.Property, "yes"));
             tabs[0].contents.Add(new ItemContent(property, ItemType.Property, "no"));
+            
+            tabs[1].contents.Add(new ItemContent(property, ItemType.Property, "onTrue"));
+            tabs[1].contents.Add(new ItemContent(property, ItemType.Property, "onFalse"));
 
             tabs[2].contents.Add(
                 new ItemContent(ItemType.GUI)

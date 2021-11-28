@@ -9,20 +9,24 @@ namespace BennyKok.ReactiveProperty
     public class BoolProperty : TextBaseProperty<bool>
     {
         public BoolEvent valueChanged;
-
+        public UnityEvent onTrue;
+        public UnityEvent onFalse;
+        
         public string yes;
         public string no;
 
         public override bool Value
         {
-            get
-            {
-                return base.Value;
-            }
+            get => base.Value;
             set
             {
                 base.Value = value;
                 valueChanged.Invoke(base.Value);
+                
+                if (base.Value)
+                    onTrue.Invoke();
+                else
+                    onFalse.Invoke();
             }
         }
 

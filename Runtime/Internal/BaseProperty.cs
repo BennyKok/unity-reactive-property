@@ -20,6 +20,12 @@ namespace BennyKok.ReactiveProperty
         [System.NonSerialized]
         private Dictionary<GameObject, Action<ResolveSate>> handlerMap = new Dictionary<GameObject, Action<ResolveSate>>();
 
+        public override void InitValue()
+        {
+            // To trigger the listener
+            Value = Value;
+        }
+
         [SerializeField]
         private T value;
 
@@ -67,7 +73,7 @@ namespace BennyKok.ReactiveProperty
 
             //First invoke
             handler.Invoke(ResolveSate.Bind);
-            handler.Invoke(ResolveSate.Update);
+            // handler.Invoke(ResolveSate.Update);
 
             if (emitEvent)
             {

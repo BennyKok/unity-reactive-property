@@ -128,6 +128,9 @@ namespace BennyKok.ReactiveProperty
                         //Since we don't bind all the child, we break once we got one
                         break;
                     }
+                    
+                    // We initialize the property
+                    reflect.InitValue();
                 }
             }
 

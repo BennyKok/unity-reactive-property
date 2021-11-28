@@ -1,0 +1,25 @@
+{
+    "name": "BennyKok.ReactiveProperty.Editor",
+    "rootNamespace": "BennyKok.ReactiveProperty.Editor",
+    "references": [
+        "GUID:c0f7ec6407949cb41b4f9b3d4ae3490e",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.textmeshpro",
+            "expression": "",
+            "define": "HAS_TMP"
+        }
+    ],
+    "noEngineReferences": false
+}

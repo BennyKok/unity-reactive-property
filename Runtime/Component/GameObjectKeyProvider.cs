@@ -62,6 +62,8 @@ namespace BennyKok.ReactiveProperty
                         {
                             var persistenceKey = property.GetPersistenceKey(provider);
                             EditorGUILayout.LabelField(persistenceKey);
+                            GUILayout.FlexibleSpace();
+                            EditorGUILayout.LabelField(property.GetValueDisplay());
                             if (GUILayout.Button("Clear"))
                                 PlayerPrefs.DeleteKey(persistenceKey);
                         }
@@ -69,6 +71,15 @@ namespace BennyKok.ReactiveProperty
                     }
                 }
                 EditorGUI.indentLevel--;
+            }
+            if (GUILayout.Button("Clear All"))
+            {
+                for (int i = 0; i < savedProperties.Count; i++)
+                {
+                    var property = savedProperties[i];
+                    var persistenceKey = property.GetPersistenceKey(provider);
+                    PlayerPrefs.DeleteKey(persistenceKey);
+                }
             }
 
             serializedObject.ApplyModifiedProperties();
@@ -95,7 +106,7 @@ namespace BennyKok.ReactiveProperty
             var allFields = refObject.GetType().GetFields();
             foreach (var field in allFields)
             {
-                if (field.GetValue(refObject) is Property reflect)
+                if (field.GetValue(refObject) is Property reflect && string.IsNullOrEmpty(reflect.key))
                     savedProperties.Add(reflect);
             }
         }

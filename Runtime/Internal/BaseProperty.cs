@@ -47,6 +47,11 @@ namespace BennyKok.ReactiveProperty
             }
         }
 
+        public override string GetValueDisplay()
+        {
+            return Value.ToString();
+        }
+
         internal void UpdateValueInternal(T value)
         {
             this.value = value;

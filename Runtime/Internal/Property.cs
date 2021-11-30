@@ -27,5 +27,10 @@ namespace BennyKok.ReactiveProperty
         {
             keyProvider = null;
         }
+
+        public virtual string GetValueDisplay()
+        {
+            return null;
+        }
     }
 }

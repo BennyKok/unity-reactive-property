@@ -11,8 +11,6 @@ namespace BennyKok.ReactiveProperty
     {
         [FormerlySerializedAs("persistance")] public bool persistence;
 
-        public string key;
-
         [System.NonSerialized] public bool loaded;
 
         public override T Value
@@ -21,7 +19,7 @@ namespace BennyKok.ReactiveProperty
             {
                 if (persistence && !loaded)
                 {
-                    var saved = Load(GetPersistenceKey(key), base.Value);
+                    var saved = Load(GetPersistenceKey(), base.Value);
                     loaded = true;
                     UpdateValueInternal(saved);
                     return saved;
@@ -34,15 +32,9 @@ namespace BennyKok.ReactiveProperty
                 base.Value = value;
                 if (persistence)
                 {
-                    Save(GetPersistenceKey(key), value);
+                    Save(GetPersistenceKey(), value);
                 }
             }
-        }
-
-        public string GetPersistenceKey(string key)
-        {
-            if (keyProvider == null) return key;
-            return keyProvider.GetPersistenceKey(key);
         }
 
         public abstract void Save(string key, T value);

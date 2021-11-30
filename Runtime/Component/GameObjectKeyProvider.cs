@@ -61,9 +61,9 @@ namespace BennyKok.ReactiveProperty
                         using (new EditorGUILayout.HorizontalScope())
                         {
                             var persistenceKey = property.GetPersistenceKey(provider);
-                            EditorGUILayout.LabelField(persistenceKey);
+                            GUILayout.Label(persistenceKey);
                             GUILayout.FlexibleSpace();
-                            EditorGUILayout.LabelField(property.GetValueDisplay());
+                            GUILayout.Label(property.GetValueDisplay());
                             if (GUILayout.Button("Clear"))
                                 PlayerPrefs.DeleteKey(persistenceKey);
                         }

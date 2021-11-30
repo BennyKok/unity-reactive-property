@@ -34,7 +34,7 @@ namespace BennyKok.ReactiveProperty
         {
             // base.OnInspectorGUI();
             serializedObject.Update();
-            
+
             var provider = target as GameObjectKeyProvider;
 
             EditorGUILayout.PropertyField(autoName);
@@ -47,9 +47,9 @@ namespace BennyKok.ReactiveProperty
             {
                 Refresh();
             }
-            
+
             EditorGUILayout.Space();
-            
+
             using (new EditorGUILayout.VerticalScope(GUI.skin.box))
             {
                 EditorGUILayout.LabelField("Saved Properties", EditorStyles.boldLabel);
@@ -86,17 +86,17 @@ namespace BennyKok.ReactiveProperty
         public void Refresh()
         {
             savedProperties.Clear();
-            
+
             var refObject = componentTarget.objectReferenceValue;
-            
+
             if (refObject == null)
                 return;
-            
+
             var allFields = refObject.GetType().GetFields();
             foreach (var field in allFields)
             {
-                var reflect = field.GetValue(refObject) as Property;
-                savedProperties.Add(reflect);
+                if (field.GetValue(refObject) is Property reflect)
+                    savedProperties.Add(reflect);
             }
         }
     }

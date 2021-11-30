@@ -58,7 +58,7 @@ namespace BennyKok.ReactiveProperty
                     for (int i = 0; i < savedProperties.Count; i++)
                     {
                         var property = savedProperties[i];
-                        EditorGUILayout.BeginHorizontal();
+                        using (new EditorGUILayout.HorizontalScope())
                         {
                             var persistenceKey = property.GetPersistenceKey(provider);
                             EditorGUILayout.LabelField(persistenceKey);
@@ -67,7 +67,6 @@ namespace BennyKok.ReactiveProperty
                             if (GUILayout.Button("Clear"))
                                 PlayerPrefs.DeleteKey(persistenceKey);
                         }
-                        EditorGUILayout.EndHorizontal();
                     }
                 }
                 EditorGUI.indentLevel--;
@@ -106,7 +105,7 @@ namespace BennyKok.ReactiveProperty
             var allFields = refObject.GetType().GetFields();
             foreach (var field in allFields)
             {
-                if (field.GetValue(refObject) is Property reflect && string.IsNullOrEmpty(reflect.key))
+                if (field.GetValue(refObject) is Property reflect && !string.IsNullOrEmpty(reflect.key))
                     savedProperties.Add(reflect);
             }
         }

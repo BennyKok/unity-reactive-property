@@ -28,7 +28,7 @@ namespace BennyKok.ReactiveProperty
             keyProvider = null;
         }
 
-        public virtual string GetPersistenceValueDisplay()
+        public virtual string GetPersistenceValueDisplay(string key)
         {
             return null;
         }

@@ -63,7 +63,7 @@ namespace BennyKok.ReactiveProperty
                             var persistenceKey = property.GetPersistenceKey(provider);
                             GUILayout.Label(persistenceKey);
                             GUILayout.FlexibleSpace();
-                            GUILayout.Label(property.GetPersistenceValueDisplay());
+                            GUILayout.Label(property.GetPersistenceValueDisplay(persistenceKey));
                             if (GUILayout.Button("Clear"))
                                 PlayerPrefs.DeleteKey(persistenceKey);
                         }

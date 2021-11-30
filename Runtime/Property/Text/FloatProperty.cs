@@ -59,7 +59,7 @@ namespace BennyKok.ReactiveProperty
             return (roundDigit > -1 ? Value : (float)System.Math.Round(Value, roundDigit)).ToString();
         }
         
-        public override string GetPersistenceValueDisplay()
+        public override string GetPersistenceValueDisplay(string key)
         {
             return PlayerPrefs.GetFloat(key).ToString();
         }

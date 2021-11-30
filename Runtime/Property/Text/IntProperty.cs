@@ -42,7 +42,7 @@ namespace BennyKok.ReactiveProperty
             PlayerPrefs.SetInt(key, value);
         }
         
-        public override string GetPersistenceValueDisplay()
+        public override string GetPersistenceValueDisplay(string key)
         {
             return PlayerPrefs.GetInt(key).ToString();
         }

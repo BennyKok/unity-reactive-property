@@ -18,6 +18,7 @@ namespace BennyKok.ReactiveProperty
                 {
                     o.DataBindChildAuto(data[i]);
                 }
+
                 if (callback != null)
                     callback.Invoke(i, o);
             }
@@ -49,8 +50,6 @@ namespace BennyKok.ReactiveProperty
 
         public override void OnCreateResolver()
         {
-
         }
-
     }
 }

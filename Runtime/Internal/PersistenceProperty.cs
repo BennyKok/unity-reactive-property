@@ -7,14 +7,13 @@ using UnityEngine.Serialization;
 namespace BennyKok.ReactiveProperty
 {
     [System.Serializable]
-    public abstract class PersistanceProperty<T> : BaseProperty<T>
+    public abstract class PersistenceProperty<T> : BaseProperty<T>
     {
         [FormerlySerializedAs("persistance")] public bool persistence;
 
         public string key;
 
-        [System.NonSerialized]
-        public bool loaded;
+        [System.NonSerialized] public bool loaded;
 
         public override T Value
         {
@@ -22,11 +21,12 @@ namespace BennyKok.ReactiveProperty
             {
                 if (persistence && !loaded)
                 {
-                    var saved = Load(key, base.Value);
+                    var saved = Load(GetPersistenceKey(key), base.Value);
                     loaded = true;
                     UpdateValueInternal(saved);
                     return saved;
                 }
+
                 return base.Value;
             }
             set
@@ -34,14 +34,19 @@ namespace BennyKok.ReactiveProperty
                 base.Value = value;
                 if (persistence)
                 {
-                    Save(key, value);
+                    Save(GetPersistenceKey(key), value);
                 }
             }
+        }
+
+        public string GetPersistenceKey(string key)
+        {
+            if (keyProvider == null) return key;
+            return keyProvider.GetPersistenceKey(key);
         }
 
         public abstract void Save(string key, T value);
 
         public abstract T Load(string key, T defaultValue);
     }
-
 }

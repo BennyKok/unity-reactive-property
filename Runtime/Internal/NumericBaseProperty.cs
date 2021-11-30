@@ -9,5 +9,4 @@ namespace BennyKok.ReactiveProperty
     public abstract class NumericBaseProperty<T> : TextBaseProperty<T>
     {
     }
-
 }

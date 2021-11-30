@@ -50,20 +50,25 @@ namespace BennyKok.ReactiveProperty
             {
                 return null;
             }
+
             return DataBind(target, false, data, targetField);
         }
 
-        private static DataBindResult DataBind(GameObject target, bool bindChild, object data, params string[] specificFields)
+        private static DataBindResult DataBind(GameObject target, bool bindChild, object data,
+            params string[] specificFields)
         {
-            FieldInfo[] allFields;
-            if (!reflectionCache.TryGetValue(data.GetType(), out allFields))
+            if (!reflectionCache.TryGetValue(data.GetType(), out var allFields))
             {
-                UnityEngine.Debug.Log("Reflecting for " + data.GetType());
+                Debug.Log("Reflecting for " + data.GetType());
                 // Stopwatch stopwatch = Stopwatch.StartNew();
                 allFields = data.GetType().GetFields();
                 // UnityEngine.Debug.Log("Reflecting time " + stopwatch.ElapsedMilliseconds);
                 reflectionCache.Add(data.GetType(), allFields);
             }
+
+            IPersistenceKeyProvider keyProvider = null;
+            if (data is Component component) component.TryGetComponent(out keyProvider);
+            if (keyProvider == null) target.TryGetComponent(out keyProvider);
 
             var result = new DataBindResult();
 
@@ -121,16 +126,17 @@ namespace BennyKok.ReactiveProperty
                         // Debug.Log("Test");
                         if (reflect.BindListener(target))
                         {
-                            UnityEngine.Debug.Log("DataBind bind listener target field (" + field.Name + ") in " + target.name);
+                            UnityEngine.Debug.Log("DataBind bind listener target field (" + field.Name + ") in " +
+                                                  target.name);
                             result.properties.Add(reflect, target);
                         }
 
                         //Since we don't bind all the child, we break once we got one
                         break;
                     }
-                    
+
                     // We initialize the property
-                    reflect.InitValue();
+                    reflect.InitValue(keyProvider);
                 }
             }
 
@@ -156,6 +162,7 @@ namespace BennyKok.ReactiveProperty
                 foreach (Transform t in c)
                     queue.Enqueue(t);
             }
+
             return null;
         }
 

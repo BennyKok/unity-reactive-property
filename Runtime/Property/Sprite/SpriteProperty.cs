@@ -12,10 +12,7 @@ namespace BennyKok.ReactiveProperty
 
         public override Sprite Value
         {
-            get
-            {
-                return base.Value;
-            }
+            get { return base.Value; }
             set
             {
                 base.Value = value;

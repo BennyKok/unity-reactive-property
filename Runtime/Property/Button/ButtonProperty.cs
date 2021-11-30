@@ -15,11 +15,11 @@ namespace BennyKok.ReactiveProperty
         }
 
         [System.NonSerialized]
-        public Button targetButton;
+        public UnityEngine.UI.Button targetButton;
 
         public override void OnCreateResolver()
         {
-            AddResolver<Button>((button, state) =>
+            AddResolver<UnityEngine.UI.Button>((button, state) =>
             {
                 switch (state)
                 {

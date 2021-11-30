@@ -5,9 +5,18 @@ namespace BennyKok.ReactiveProperty
 {
     public abstract class Property
     {
-        public abstract void InitValue();
+        protected IPersistenceKeyProvider keyProvider;
+        public virtual void InitValue(IPersistenceKeyProvider keyProvider = null) => this.keyProvider = keyProvider;
         public abstract bool CanBind();
-        public abstract bool BindListener(GameObject target, bool emitEvent = false);
-        public abstract void UnBindListener(GameObject target, bool emitEvent = false);
+
+        public virtual bool BindListener(GameObject target, bool emitEvent = false)
+        {
+            return false;
+        }
+
+        public virtual void UnBindListener(GameObject target, bool emitEvent = false)
+        {
+            keyProvider = null;
+        }
     }
 }

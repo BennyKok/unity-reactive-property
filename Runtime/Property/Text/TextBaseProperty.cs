@@ -7,7 +7,7 @@ using UnityEngine.Events;
 namespace BennyKok.ReactiveProperty
 {
     [System.Serializable]
-    public abstract class TextBaseProperty<T> : PersistanceProperty<T>
+    public abstract class TextBaseProperty<T> : PersistenceProperty<T>
     {
 #if HAS_TMP
         public TMPro.TMP_Text targetText;

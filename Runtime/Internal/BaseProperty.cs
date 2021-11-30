@@ -17,24 +17,22 @@ namespace BennyKok.ReactiveProperty
         //bool unBind
         public event Action<ResolveSate> onResolverUpdate;
 
-        [System.NonSerialized]
-        private Dictionary<GameObject, Action<ResolveSate>> handlerMap = new Dictionary<GameObject, Action<ResolveSate>>();
+        [System.NonSerialized] private Dictionary<GameObject, Action<ResolveSate>> handlerMap =
+            new Dictionary<GameObject, Action<ResolveSate>>();
 
-        public override void InitValue()
+        public override void InitValue(IPersistenceKeyProvider keyProvider = null)
         {
+            base.InitValue(keyProvider);
+            
             // To trigger the listener
             Value = Value;
         }
 
-        [SerializeField]
-        private T value;
+        [SerializeField] private T value;
 
         public virtual T Value
         {
-            get
-            {
-                return value;
-            }
+            get { return value; }
             set
             {
                 this.value = value;
@@ -61,6 +59,7 @@ namespace BennyKok.ReactiveProperty
                 Debug.LogWarning("Target is null, nothing to bind");
                 return false;
             }
+
             var handler = OnCreateListener(target);
             if (handler == null)
             {
@@ -102,6 +101,8 @@ namespace BennyKok.ReactiveProperty
             {
                 Value = Value;
             }
+
+            base.UnBindListener(target, emitEvent);
         }
 
         public Action<ResolveSate> OnCreateListener(GameObject target)
@@ -151,10 +152,7 @@ namespace BennyKok.ReactiveProperty
                 if (component != null)
                 {
                     resolvers.Add(typeof(U),
-                    (state) =>
-                    {
-                        onResolve.Invoke(component, state);
-                    }
+                        (state) => { onResolve.Invoke(component, state); }
                     );
                 }
             }
@@ -162,7 +160,9 @@ namespace BennyKok.ReactiveProperty
 
         public enum ResolveSate
         {
-            Bind, UnBind, Update
+            Bind,
+            UnBind,
+            Update
         }
 
         public abstract void OnCreateResolver();
@@ -177,5 +177,4 @@ namespace BennyKok.ReactiveProperty
             return true;
         }
     }
-
 }

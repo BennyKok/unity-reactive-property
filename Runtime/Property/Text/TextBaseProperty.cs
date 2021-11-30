@@ -50,5 +50,10 @@ namespace BennyKok.ReactiveProperty
         {
             return Value.ToString();
         }
+
+        public override string GetPersistenceValueDisplay()
+        {
+            return PlayerPrefs.GetString(key);
+        }
     }
 }

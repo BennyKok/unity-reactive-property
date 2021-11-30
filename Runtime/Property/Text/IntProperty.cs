@@ -41,6 +41,11 @@ namespace BennyKok.ReactiveProperty
         {
             PlayerPrefs.SetInt(key, value);
         }
+        
+        public override string GetPersistenceValueDisplay()
+        {
+            return PlayerPrefs.GetInt(key).ToString();
+        }
     }
 
     [System.Serializable]

@@ -28,9 +28,14 @@ namespace BennyKok.ReactiveProperty
             keyProvider = null;
         }
 
-        public virtual string GetValueDisplay()
+        public virtual string GetPersistenceValueDisplay()
         {
             return null;
+        }
+        
+        public virtual void ClearPersistenceValue(string key)
+        {
+            PlayerPrefs.DeleteKey(key);
         }
     }
 }

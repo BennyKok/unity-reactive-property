@@ -45,7 +45,10 @@ namespace BennyKok.ReactiveProperty
             return Value ? yes : no;
         }
         
-
+        public override string GetPersistenceValueDisplay()
+        {
+            return ( PlayerPrefs.GetInt(key) != 0 ? "True" : "False" );
+        }
     }
 
     [System.Serializable]

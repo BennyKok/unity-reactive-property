@@ -2,6 +2,6 @@
 {
     public interface IPersistenceKeyProvider
     {
-        public string GetPersistenceKey(string currentKey) => currentKey;
+        public string GetPersistenceKey(string currentKey);
     }
 }

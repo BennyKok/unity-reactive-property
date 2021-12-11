@@ -37,6 +37,11 @@ namespace BennyKok.ReactiveProperty
             }
         }
 
+        public override string GetPersistenceValueDisplay(string key)
+        {
+            return Load(GetPersistenceKey(), base.Value).ToString();
+        }
+
         public abstract void Save(string key, T value);
 
         public abstract T Load(string key, T defaultValue);

@@ -14,19 +14,19 @@ namespace BennyKok.ReactiveProperty.Editor
         {
             base.InitTab(property, tabs);
 
-            tabs[2].contents.Add(
-                new ItemContent(ItemType.GUI)
-                {
-                    enableIf = property.FindPropertyRelative("persistence"),
-                    guiHeightCallback = () => EditorGUIUtility.singleLineHeight + verticalSpace,
-                    guiDrawCallback = (rect) =>
-                    {
-                        EditorGUI.BeginDisabledGroup(true);
-                        EditorGUI.TextField(rect, PlayerPrefs.GetString(property.FindPropertyRelative("key").stringValue));
-                        EditorGUI.EndDisabledGroup();
-                    }
-                }
-            );
+            // tabs[2].contents.Add(
+            //     new ItemContent(ItemType.GUI)
+            //     {
+            //         enableIf = property.FindPropertyRelative("persistence"),
+            //         guiHeightCallback = () => EditorGUIUtility.singleLineHeight + verticalSpace,
+            //         guiDrawCallback = (rect) =>
+            //         {
+            //             EditorGUI.BeginDisabledGroup(true);
+            //             EditorGUI.TextField(rect, PlayerPrefs.GetString(property.FindPropertyRelative("key").stringValue));
+            //             EditorGUI.EndDisabledGroup();
+            //         }
+            //     }
+            // );
         }
     }
 

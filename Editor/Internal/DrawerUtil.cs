@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace BennyKok.ReactiveProperty.Editor
 {
-    public class BlazeDrawerUtil
+    public class DrawerUtil
     {
         public static float AnimSpeed = 2.5f;
         private static Stack<Color> cacheColors = new Stack<Color>();

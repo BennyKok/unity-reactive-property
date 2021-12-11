@@ -5,6 +5,10 @@ namespace BennyKok.ReactiveProperty
 {
     public abstract class Property
     {
+#if UNITY_EDITOR
+        public int editor_openedTab = 0;
+#endif
+        
         protected IPersistenceKeyProvider keyProvider;
         public virtual void InitValue(IPersistenceKeyProvider keyProvider = null) => this.keyProvider = keyProvider;
         public abstract bool CanBind();

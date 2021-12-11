@@ -23,7 +23,7 @@ namespace BennyKok.ReactiveProperty
         public override void InitValue(IPersistenceKeyProvider keyProvider = null)
         {
             base.InitValue(keyProvider);
-            
+
             // To trigger the listener
             Value = Value;
         }

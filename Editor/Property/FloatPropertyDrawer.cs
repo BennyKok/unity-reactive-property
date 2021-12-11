@@ -22,19 +22,19 @@ namespace BennyKok.ReactiveProperty.Editor
             tabs[1].contents.Add(new ItemContent(property, ItemType.Property, "valueIncreased"));
             tabs[1].contents.Add(new ItemContent(property, ItemType.Property, "valueDecreased"));
 
-            tabs[2].contents.Add(
-                new ItemContent(ItemType.GUI)
-                {
-                    enableIf = property.FindPropertyRelative("persistence"),
-                    guiHeightCallback = () => EditorGUIUtility.singleLineHeight + verticalSpace,
-                    guiDrawCallback = (rect) =>
-                    {
-                        EditorGUI.BeginDisabledGroup(true);
-                        EditorGUI.TextField(rect, PlayerPrefs.GetFloat(property.FindPropertyRelative("key").stringValue).ToString());
-                        EditorGUI.EndDisabledGroup();
-                    }
-                }
-            );
+            // tabs[2].contents.Add(
+            //     new ItemContent(ItemType.GUI)
+            //     {
+            //         enableIf = property.FindPropertyRelative("persistence"),
+            //         guiHeightCallback = () => EditorGUIUtility.singleLineHeight + verticalSpace,
+            //         guiDrawCallback = (rect) =>
+            //         {
+            //             EditorGUI.BeginDisabledGroup(true);
+            //             EditorGUI.TextField(rect, PlayerPrefs.GetFloat(property.FindPropertyRelative("key").stringValue).ToString());
+            //             EditorGUI.EndDisabledGroup();
+            //         }
+            //     }
+            // );
         }
     }
 

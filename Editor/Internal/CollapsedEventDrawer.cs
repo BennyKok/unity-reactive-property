@@ -23,10 +23,10 @@ namespace BennyKok.ReactiveProperty.Editor
             if (visible == null)
             {
                 visible = new AnimBool();
-                visible.speed = BlazeDrawerUtil.AnimSpeed;
+                visible.speed = DrawerUtil.AnimSpeed;
                 visible.valueChanged.AddListener(() =>
                 {
-                    BlazeDrawerUtil.RepaintInspector(property.serializedObject);
+                    DrawerUtil.RepaintInspector(property.serializedObject);
                 });
             }
         }
@@ -62,7 +62,7 @@ namespace BennyKok.ReactiveProperty.Editor
 #else
             visible.target = EditorGUI.Foldout(position, visible.target, temp, true);
 #endif
-            if (BlazeDrawerUtil.BeginFade(visible))
+            if (DrawerUtil.BeginFade(visible))
             {
                 label.text = null;
                 position.height = base.GetPropertyHeight(property, label);
@@ -70,7 +70,7 @@ namespace BennyKok.ReactiveProperty.Editor
                 base.OnGUI(position, property, label);
             }
 
-            BlazeDrawerUtil.EndFade();
+            DrawerUtil.EndFade();
 #if UNITY_2019_1_OR_NEWER
             EditorGUI.EndFoldoutHeaderGroup();
 #endif

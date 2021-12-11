@@ -19,6 +19,8 @@ namespace BennyKok.ReactiveProperty.Editor
         SerializedProperty previousProp;
 
         public static GUIStyle miniButton;
+        public static GUIStyle tabButton;
+        public static GUIStyle activeTabButton;
 
         public class PropertyTab
         {
@@ -40,10 +42,14 @@ namespace BennyKok.ReactiveProperty.Editor
         }
 
         public bool init;
+        private TabsState currentState;
 
         public enum ItemType
         {
-            Property, Header, HeaderButton, GUI
+            Property,
+            Header,
+            HeaderButton,
+            GUI
         }
 
         public class ItemContent
@@ -74,8 +80,9 @@ namespace BennyKok.ReactiveProperty.Editor
                 }
             }
 
-            public ItemContent(SerializedProperty property, ItemType type, string name, string buttonName, Action buttonCallback)
-            : this(property, type, name)
+            public ItemContent(SerializedProperty property, ItemType type, string name, string buttonName,
+                Action buttonCallback)
+                : this(property, type, name)
             {
                 this.buttonName = buttonName;
                 this.buttonCallback = buttonCallback;
@@ -91,14 +98,17 @@ namespace BennyKok.ReactiveProperty.Editor
                     {
                         return 0;
                     }
+
                     if (x.enableCallback != null && !x.enableCallback.Invoke())
                     {
                         return 0;
                     }
+
                     if (x.guiHeightCallback != null)
                     {
                         return x.guiHeightCallback.Invoke();
                     }
+
                     if (x.type == ItemType.Property)
                     {
                         return EditorGUI.GetPropertyHeight(x.property) + verticalSpace;
@@ -108,7 +118,7 @@ namespace BennyKok.ReactiveProperty.Editor
                         return subTitleVerticalSpace + verticalSpace;
                     }
                 }
-                ) + verticalSpace * 2;
+            ) + verticalSpace * 2;
         }
 
         public void Init(SerializedProperty property)
@@ -119,6 +129,12 @@ namespace BennyKok.ReactiveProperty.Editor
 
                 miniButton = new GUIStyle("button");
                 miniButton.fontSize = 10;
+
+                tabButton = new GUIStyle(EditorStyles.toolbarButton);
+                tabButton.fixedHeight = EditorGUIUtility.singleLineHeight;
+
+                activeTabButton = new GUIStyle(tabButton);
+                activeTabButton.normal.background = EditorStyles.selectionRect.normal.background;
 
                 previousProp = property;
 
@@ -144,13 +160,15 @@ namespace BennyKok.ReactiveProperty.Editor
                 currentTabState.tabs = new List<PropertyTab>();
                 states.Add(property.propertyPath, currentTabState);
             }
+
             return currentTabState;
         }
 
         public void Refresh(SerializedProperty property)
         {
             var isNew = false;
-            var currentTab = GetCurrentTab(property);
+            var state = GetCurrentState(property);
+            var currentTab = state.tabs;
             isNew = currentTab.Count == 0;
 
             if (isNew)
@@ -159,8 +177,20 @@ namespace BennyKok.ReactiveProperty.Editor
                 foreach (var tab in currentTab)
                 {
                     tab.visible = new AnimBool();
-                    tab.visible.speed = BlazeDrawerUtil.AnimSpeed;
-                    tab.visible.valueChanged.AddListener(() => { BlazeDrawerUtil.RepaintInspector(property.serializedObject); });
+                    tab.visible.speed = DrawerUtil.AnimSpeed;
+                    tab.visible.valueChanged.AddListener(() =>
+                    {
+                        DrawerUtil.RepaintInspector(property.serializedObject);
+                    });
+                }
+
+                var openedTab = property.FindPropertyRelative("editor_openedTab");
+
+                if (property.isExpanded && openedTab.intValue < currentTab.Count)
+                {
+                    currentTab[openedTab.intValue].visible.value = true;
+                    state.editItem = openedTab.intValue;
+                    state.trackedEditItem = openedTab.intValue;
                 }
             }
         }
@@ -185,40 +215,53 @@ namespace BennyKok.ReactiveProperty.Editor
             var allTabs = GetCurrentTab(property);
 
             var valueProperty = property.FindPropertyRelative("value");
+            var persistenceProperty = property.FindPropertyRelative("persistence");
+
+            if (persistenceProperty.boolValue)
+                label.text += " (Saved)";
 
             EditorGUI.BeginProperty(position, label, property);
 
-            var propertyRect = new Rect(position.x, position.y, position.width - tabBtnWidth * allTabs.Count, EditorGUIUtility.singleLineHeight);
+            var propertyRect = new Rect(position.x, position.y, position.width - tabBtnWidth * allTabs.Count,
+                EditorGUIUtility.singleLineHeight);
             EditorGUI.PropertyField(propertyRect, valueProperty, label);
 
+            currentState = GetCurrentState(property);
             for (int i = 0; i < allTabs.Count; i++)
             {
                 var tab = allTabs[i];
-                var btnRect = new Rect(position.x + position.width - (allTabs.Count - i) * tabBtnWidth, position.y, tabBtnWidth, EditorGUIUtility.singleLineHeight);
-                if (GUI.Button(btnRect, tab.icon))
+                var btnRect = new Rect(position.x + position.width - (allTabs.Count - i) * tabBtnWidth, position.y,
+                    tabBtnWidth, EditorGUIUtility.singleLineHeight);
+                if (GUI.Button(btnRect, tab.icon, currentState.editItem == i ? activeTabButton : tabButton))
                 {
-                    if (GetCurrentState(property).editItem == i)
+                    if (currentState.editItem == i)
                     {
-                        GetCurrentState(property).editItem = -1;
+                        currentState.editItem = -1;
                         CloseAllTab(property);
+
+                        property.isExpanded = false;
                     }
                     else
                     {
-                        GetCurrentState(property).trackedEditItem = i;
-                        GetCurrentState(property).editItem = i;
+                        currentState.trackedEditItem = i;
+                        currentState.editItem = i;
                         CloseAllTab(property);
                         tab.visible.target = true;
+
+                        property.isExpanded = true;
+                        property.FindPropertyRelative("editor_openedTab").intValue = i;
                     }
                 }
             }
 
             subTitleVerticalSpace = EditorStyles.miniBoldLabel.CalcHeight(GUIContent.none, position.width);
 
-            var extraRectGroup = new Rect(position.x, position.y + EditorGUIUtility.singleLineHeight + verticalSpace, position.width, EditorGUIUtility.singleLineHeight);
+            var extraRectGroup = new Rect(position.x, position.y + EditorGUIUtility.singleLineHeight + verticalSpace,
+                position.width, EditorGUIUtility.singleLineHeight);
             extraRectGroup = EditorGUI.IndentedRect(extraRectGroup);
 
-            var displayTab = allTabs[GetCurrentState(property).trackedEditItem];
-            if (BlazeDrawerUtil.BeginFade(displayTab.visible))
+            var displayTab = allTabs[currentState.trackedEditItem];
+            if (DrawerUtil.BeginFade(displayTab.visible))
             {
                 extraRectGroup.height = GetItemsHeight(displayTab.contents);
 
@@ -232,26 +275,31 @@ namespace BennyKok.ReactiveProperty.Editor
                 GUI.EndGroup();
 
                 EditorGUI.indentLevel = indent;
-
             }
-            BlazeDrawerUtil.EndFade();
+
+            DrawerUtil.EndFade();
 
             EditorGUI.EndProperty();
         }
 
         public void DrawItemContents(List<ItemContent> contents, float width)
         {
-            var extraRect = new Rect(groupHorizontalSpace, verticalSpace, width - groupHorizontalSpace * 2, EditorGUIUtility.singleLineHeight);
+            var indent = 12;
+            var extraRect = new Rect(groupHorizontalSpace + indent, verticalSpace,
+                width - groupHorizontalSpace * 2 - indent,
+                EditorGUIUtility.singleLineHeight);
             foreach (var item in contents)
             {
                 if (item.enableIf != null && !item.enableIf.boolValue)
                 {
                     continue;
                 }
+
                 if (item.enableCallback != null && !item.enableCallback.Invoke())
                 {
                     continue;
                 }
+
                 switch (item.type)
                 {
                     case ItemType.Property:

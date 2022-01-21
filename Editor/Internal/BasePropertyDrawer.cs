@@ -134,7 +134,7 @@ namespace BennyKok.ReactiveProperty.Editor
                 tabButton.fixedHeight = EditorGUIUtility.singleLineHeight;
 
                 activeTabButton = new GUIStyle(tabButton);
-                activeTabButton.normal.background = EditorStyles.selectionRect.normal.background;
+                activeTabButton.normal.background = EditorStyles.miniButton.normal.background;
 
                 previousProp = property;
 
